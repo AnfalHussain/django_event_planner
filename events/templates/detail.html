@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="masthead text-center text-white">
+ <div class="masthead-content">
+   <div class="container">
+     <h1 class="masthead-heading mb-0">All the events,</h1>
+     <h2 class="masthead-subheading mb-0">You could ever want...</h2>
+     {% if request.user.is_anonymous %}
+       <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
+     
+     {% endif %}
+   </div>
+ </div>
+ <div class="bg-circle-1 bg-circle"></div>
+ <div class="bg-circle-2 bg-circle"></div>
+ <div class="bg-circle-3 bg-circle"></div>
+ <div class="bg-circle-4 bg-circle"></div>
+</header>
+<!--............................................-->
+<!--............................................-->
+<!--............................................-->
+<!--............................................-->
+<div class="container">
+ <div class="row">
+   <ul class="list-unstyled">
+     <li class="media">
+            <div class="col-med-6 m-5 pb-4">
+                   {% if event.image %}
+                          <img src="{{ event.image.url }}" class="card-img-top img-fluid rounded ">
+                   {% endif %}
+            </div>
+
+<div class="col-med-6 m-5 pb-4">
+      <h1>{{event.title|title}}</h1>
+      <h5>Description: {{event.description}}</h5>
+      <p>Date and Time: {{event.date}} - {{event.time}}</p>
+      <p>Location: {{ event.location }}</p>
+      <p>Price: {{ event.price }} KWD</p>
+
+      <p>Booked by: </p>
+
+      <div class="card-body" >
+        
+        {% if event.owner == request.user %}
+
+            {% for booking in booking_obj %}
+                    <button>{{booking.user}}</button>
+            {% endfor %}
+      </div>
+
+            <a href="{% url 'update' event.id %}" class="btn btn-primary rounded-pill mt-3">Edit this event</a>
+        {% endif %}
+
+
+
+     {% if event.get_available_tickets == 0 %}
+  
+          <a  class="btn btn-warning rounded-pill mt-3 ">Full</a>
+
+    {% else %}
+          <a href="{% url 'book' event.id %}" class="btn btn-primary rounded-pill mt-3">Book</a>
+
+     {% endif %}
+
+
+</div> <!--closing the col -->
+</li>
+</ul>
+</div> <!--closing the row -->
+</div> <!--closing the container -->
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead text-center text-white">
+  <div class="masthead-content">
+    <div class="container">
+      <h1 class="masthead-heading mb-0">Your Events</h1>
+
+        <a href="{% url 'create' %}" class="btn btn-dark btn-xl rounded-pill mt-5">Create event!</a>
+ 
+    </div>
+  </div>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
+
+
+<h1 class="text-center" style="padding:10px;"> My Events: </h1>
+
+<div class="col-12 text-center" style="padding-bottom:50px;">
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Event Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Price</th>
+
+    </tr>
+  </thead>
+
+  {% for item in event %}
+      <tbody>
+        <tr>
+          <td>{{item.title}}</td>
+          <td>{{item.date}}</td>
+          <td>{{item.time}}</td>
+          <td>{{item.price}}</td>
+        </tr>
+      </tbody>
+  {% endfor %}
+
+
+</table>
+</div>
+
+<!--..............................-->
+
+
+
+<h1 class="text-center" style="padding:10px;"> Booking History: </h1>
+
+<div class="col-12 text-center" style="padding-bottom:50px;">
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Event Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Price</th>
+
+    </tr>
+  </thead>
+
+  {% for item in history %}
+      <tbody>
+        <tr>
+          <td>{{item.event.title}}</td>
+          <td>{{item.event.date}}</td>
+          <td>{{item.event.time}}</td>
+          <td>{{item.event.price}}</td>
+        </tr>
+      </tbody>
+  {% endfor %}
+
+
+</table>
+</div>
+<!--..............................-->
+
+
+
+
+{% endblock %}

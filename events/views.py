@@ -1,10 +1,156 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin
+from .forms import UserSignup, UserLogin, BookForm, EventForm
+from django.contrib import messages
+from .models import Event, Book
+from datetime import datetime
+from django.db.models import Q
+from django.contrib.auth.models import User
+
+
 
 def home(request):
-    return render(request, 'home.html')
+    if request.user.is_anonymous :
+        return redirect ("login")
+       
+    context = {
+        'event' : Event.objects.filter(date__gte=datetime.now()),
+
+    }
+    return render(request, 'home.html', context)
+
+def dashboard(request):
+    if request.user.is_anonymous :
+        return redirect ("login")
+
+    history_obj = Book.objects.filter(user=request.user)
+    history_obj = Book.objects.filter(event__date__lt =datetime.now() )
+
+
+
+    context = {
+        'event' : Event.objects.filter(owner=request.user),
+        'history' : history_obj,
+
+
+    }
+
+    return render(request, 'dashboard.html', context)
+
+
+
+
+def profile(request, user_name):
+    if request.user.is_anonymous :
+        return redirect ("login")
+
+
+    context = {
+        'user' : User.objects.get(username=user_name),
+
+
+    }
+
+    return render(request, 'profile.html', context)
+
+
+
+
+
+
+
+def search(request):
+    event = Event.objects.filter(date__gte=datetime.now())
+
+    query = request.GET.get('q')
+# As a user I can search for an event either 
+# by it's title, description or organizer.
+    if query:
+        event = event.filter(
+            # we need to get the username from the owner field
+            Q(owner__username__icontains=query)|  
+            Q(title__icontains=query)|
+            Q(description__icontains=query)
+
+             ).distinct()
+
+
+    context = {
+        'event' : event,
+    }
+
+    return render(request, 'search.html', context)
+
+
+
+def book_event(request,event_id):
+    if request.user.is_anonymous:
+        return redirect ('login')
+
+    event_obj = Event.objects.get(id=event_id)
+    form = BookForm()
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+
+        tickets = request.POST.get('tickets', None)
+
+        if event_obj.get_available_tickets() < int(tickets):
+            messages.warning(request, "you can't book, There is no enough available tickets! ")
+
+        if form.is_valid():
+            book = form.save(commit=False)
+            book.user = request.user
+            book.event = event_obj
+            book.save()  
+
+            return redirect('home')
+
+    context = {
+    'event': event_obj,
+     'form': form, 
+
+
+    }
+    return render(request, 'book.html', context)
+    
+
+def create(request):
+    if request.user.is_anonymous :
+        return redirect ('login')
+    form = EventForm()
+    if request.method == "POST" :
+        form = EventForm(request.POST, request.FILES)
+        if form.is_valid():
+            event = form.save(commit=False)
+
+            event.owner = request.user
+
+            event.save()
+            return redirect ('dashboard')
+    context = {
+        'form' : form,
+    }
+    return render (request, 'create.html', context)
+
+
+
+def update(request, event_id) :
+   event = Event.objects.get(id=event_id)
+   form = EventForm(instance=event)
+   if request.method == "POST":
+       form = EventForm(request.POST, request.FILES, instance=event)
+       if form.is_valid():
+           form.save()
+           return redirect('detail', event_id)
+   context = {
+       "form": form,
+       "event": event,
+   }
+   return render(request, 'update.html', context)
+
+
+
 
 class Signup(View):
     form_class = UserSignup
@@ -46,7 +192,7 @@ class Login(View):
             if auth_user is not None:
                 login(request, auth_user)
                 messages.success(request, "Welcome Back!")
-                return redirect('dashboard')
+                return redirect('home')
             messages.warning(request, "Wrong email/password combination. Please try again.")
             return redirect("login")
         messages.warning(request, form.errors)
@@ -59,3 +205,20 @@ class Logout(View):
         messages.success(request, "You have successfully logged out.")
         return redirect("login")
 
+
+
+def detail (request, event_id) :
+    event = Event.objects.get(id=event_id)
+    booking_obj = Book.objects.filter(event__owner= request.user, event= event_id  )
+
+    # booking_obj = Book.objects.filter(user=request.user)
+    
+
+
+    context = {
+    'event': event,
+    'booking_obj': booking_obj,
+
+    }
+    return render(request, 'detail.html', context)
+    

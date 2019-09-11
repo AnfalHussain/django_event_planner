@@ -9,7 +9,9 @@
       {% if request.user.is_anonymous %}
         <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
       {% else %}
-        <a href="#" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
+        <a href="{% url 'search' %}" class="btn btn-dark btn-xl rounded-pill mt-5">Find events!</a>
+
+
       {% endif %}
     </div>
   </div>
@@ -19,6 +21,46 @@
   <div class="bg-circle-4 bg-circle"></div>
 </header>
 
+<div class="row m-5 pb-4">
+ {% for item in event %}
+   <div class="col-4">
+<div class="card" >
+ {% if item.image %}
+ <img src="{{ item.image.url }}" class="card-img-top img-fluid">
+ {% endif %}
+ <div class="card-body">
+   <h5 class="card-title"> {{item.title|title}} </h5>
+ </div>
+ <ul class="list-group list-group-flush">
+   <li class="list-group-item">{{ item.date }} - {{item.time}}</li>
+   <li class="list-group-item">{{ item.location }}</li>
+ </ul>
 
 
+ <div class="card-body">
+    <a href="{% url 'detail' item.id %}" class="btn btn-primary rounded-pill mt-3">View More</a>
+    
+
+    
+
+     {% if item.get_available_tickets == 0 %}
+  
+          <a  class="btn btn-warning rounded-pill mt-3 ">Full</a>
+
+    {% else %}
+          <a href="{% url 'book' item.id %}" class="btn btn-dark rounded-pill mt-3">Book</a>
+
+     {% endif %}
+
+
+
+
+ </div>
+</div> <!--end of card -->
+</div>  <!--end of col -->
+ {% endfor %}
+
+
+
+</div> <!--closing the row -->
 {% endblock %}
