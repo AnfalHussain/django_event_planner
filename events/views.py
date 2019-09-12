@@ -8,37 +8,40 @@ from datetime import datetime
 from datetime import date
 from datetime import time
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.db.models import Q
 from django.contrib.auth.models import User
-
+##############################################################
 
 def home(request):
     if request.user.is_anonymous :
         return redirect ("login")
        
     context = {
-        'event' : Event.objects.filter(date__gte=datetime.now()),
+        'events' : Event.objects.filter(date__gte=datetime.now()),
     }
     return render(request, 'home.html', context)
 
+##############################################################
 
 def dashboard(request):
     if request.user.is_anonymous :
         return redirect ("login")
 
-    # history_obj = Book.objects.filter(user=request.user)
     history_obj = Book.objects.filter(user=request.user, event__date__lt =datetime.now())
     my_bookings = Book.objects.filter(user=request.user, event__date__gte =datetime.now())
     events = Event.objects.filter(owner=request.user)
 
     context = {
-        'event' : events,   # naming
+        'event' : events,   
         'history' : history_obj,
         'my_bookings': my_bookings,
     }
     return render(request, 'dashboard.html', context)
 
+##############################################################
 
 def cancel_upcoming_booking(request, booking_id ):
     if request.user.is_anonymous :
@@ -61,9 +64,7 @@ def cancel_upcoming_booking(request, booking_id ):
         return redirect('dashboard')
     return redirect('dashboard')
 
-
-
-
+##############################################################
 
 def profile(request, user_name):
     if request.user.is_anonymous :
@@ -76,6 +77,8 @@ def profile(request, user_name):
     }
 
     return render(request, 'profile.html', context)
+
+##############################################################
 
 def edit_profile(request, user_name) :
     user = User.objects.get(username=user_name)
@@ -92,6 +95,7 @@ def edit_profile(request, user_name) :
         }
     return render(request, 'editprofile.html', context)
 
+##############################################################
 
 def find_user(request):
     user = UserProfile.objects.all()
@@ -112,7 +116,7 @@ def find_user(request):
 
     return render(request, 'finduser.html', context)
 
-
+##############################################################
 
 def search(request):
     event = Event.objects.filter(date__gte=datetime.now())
@@ -126,9 +130,7 @@ def search(request):
             Q(owner__username__icontains=query)|  
             Q(title__icontains=query)|
             Q(description__icontains=query)
-
              ).distinct()
-
 
     context = {
         'event' : event,
@@ -136,7 +138,7 @@ def search(request):
 
     return render(request, 'search.html', context)
 
-
+##############################################################
 
 def book_event(request,event_id):
     if request.user.is_anonymous:
@@ -163,11 +165,10 @@ def book_event(request,event_id):
     context = {
     'event': event_obj,
      'form': form, 
-
-
     }
     return render(request, 'book.html', context)
     
+##############################################################
 
 def create(request):
     if request.user.is_anonymous :
@@ -187,7 +188,7 @@ def create(request):
     }
     return render (request, 'create.html', context)
 
-
+##############################################################
 
 def update(request, event_id) :
    event = Event.objects.get(id=event_id)
@@ -203,8 +204,18 @@ def update(request, event_id) :
    }
    return render(request, 'update.html', context)
 
+##############################################################
 
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user= instance)
 
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save() 
+
+##############################################################
 
 class Signup(View):
     form_class = UserSignup
@@ -223,10 +234,11 @@ class Signup(View):
             messages.success(request, "You have successfully signed up.")
             login(request, user)
             return redirect("home")
-            
+
         messages.warning(request, form.errors)
         return redirect("signup")
 
+##############################################################
 
 class Login(View):
     form_class = UserLogin
@@ -253,6 +265,7 @@ class Login(View):
         messages.warning(request, form.errors)
         return redirect("login")
 
+##############################################################
 
 class Logout(View):
     def get(self, request, *args, **kwargs):
@@ -260,15 +273,11 @@ class Logout(View):
         messages.success(request, "You have successfully logged out.")
         return redirect("login")
 
-
+##############################################################
 
 def detail (request, event_id) :
     event = Event.objects.get(id=event_id)
     booking_obj = Book.objects.filter(event__owner= request.user, event= event_id  ).distinct()
-
-    # booking_obj = Book.objects.filter(user=request.user)
-
-
 
     context = {
     'event': event,
@@ -277,7 +286,7 @@ def detail (request, event_id) :
     }
     return render(request, 'detail.html', context)
 
-
+##############################################################
 
 def no_access(request):
     return render(request, 'no_access.html')

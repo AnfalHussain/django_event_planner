@@ -5,21 +5,10 @@
 {% block content %}
 <header class=" text-center text-white">
 <div class="masthead-content" style= "background-image: url({% static "video.mp4" %}); background-size: cover;   ">
-<!--           <section class="top-part">
- -->
-<!--   <div class="masthead-content"  >   
- -->
 
-<br>
-<br>
-<br>
-<br>
 
-<br>
-<br>
-<!-- <h1 class="text-left p-2">All the events,</h1>
-    <h2 class="text-left masthead-subheading p-5">You could ever want...</h2>
-<div class="text-left p-5"> -->
+<br><br><br><br><br><br><br><br><br><br><br>
+
       {% if request.user.is_anonymous %}
         <a href="{% url 'signup' %}" class="btn btn-secondary  btn-xl rounded-pill mt-5">Sign up to find events!</a>
       {% else %}
@@ -30,49 +19,20 @@
       <div>
         <a href="{% url 'finduser' %}" class="btn btn-secondary btn-xl rounded-pill mt-5">Find users!</a>
       </div>     
-        {% endif %}
+        {% endif %} 
 
+<br><br><br><br><br><br><br><br><br>
 
-
-
-
-<!--         </section>
- -->
-<!--   <div class="container">
-     -->    
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 </div>
 
     </div>
   </div>
-<!--   <div class="bg-circle-1 bg-circle"></div>
-<div class="bg-circle-2 bg-circle"></div>
-<div class="bg-circle-3 bg-circle"></div> -->
+
 </header>
-<!--         <section class="top-part">
- --><!--           <img src="{% static 'video.mp4' %}">
-           -->          <!-- <video controls autoplay loop>
-            <source src="{% static 'video.mp4' %}" type="video/mp4">
-            <source src="videos/video.ogg" type="video/ogg">
-          Your browser does not support the video tag.
-          </video> -->
-
-<!-- {#         </section>
- #} -->
-
 
 <div class="row m-5 pb-4">
 
-  {% for item in event %}
+  {% for item in events %}
     <div class="col-4">
   <div class="card-deck">
   
@@ -107,12 +67,10 @@
 
   </div>
 
-
-
   </div>
 
   </div>
-<!--  -->
+
 </div> <!--end of card -->
 </div>  <!--end of col -->
   {% endfor %}

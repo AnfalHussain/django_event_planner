@@ -6,18 +6,17 @@
     <div class="masthead-content">
       <div class="container">
 ​
-​
        {% if request.user.is_anonymous %}
 ​
          <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to have a profile!</a>
 ​
-​
-        {% else %} 
+        {% else %}
+
+        <br><br><br>
 ​
                <h1 class="masthead-heading mb-0">  {{user.user.username}}'s Profile</h1>
                 
-​
-​
+                <br><br><br>
 ​
       </div>
     </div>
@@ -75,24 +74,18 @@
 
                 </table>
 
-
-
               </div>
             </div>
           </div>
         </div>
         </div>
-            <!--#####################################################-->
         <br>
         <hr>
-            <!--#####################################################-->
-
-
+        
         <h1  class="text-center" style="padding:10px; color:#e7b3ff;"> My Events: </h1>
 
 <div class="col-12 text-center card mb-3 bg-dark text-white " style="padding-bottom:50px;">
-<!--           <div class="card mb-3 border-light bg-dark text-white rounded-pill">
- -->
+
 <table class="table table-dark">
   <thead>
     <tr>

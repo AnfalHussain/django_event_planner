@@ -5,41 +5,34 @@
 {% block content %}
 <header class=" text-center text-white">
 <div class="masthead-content" style= "background-image: url({% static "video.mp4" %}); background-size: cover;  ">
-<!--           <section class="top-part">
- -->
-<!--   <div class="masthead-content"  >   
- -->
+
 
 <br>
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-<br>
-<br>
-<!-- <h1 class="text-left p-2">All the events,</h1>
-    <h2 class="text-left masthead-subheading p-5">You could ever want...</h2>
-<div class="text-left p-5"> -->
+
       {% if request.user.is_anonymous %}
         <a href="{% url 'signup' %}" class="btn btn-secondary  btn-xl rounded-pill mt-5">Sign up to Create events!</a>
       {% else %}
 
-<!--       <h1 class="masthead-heading mb-0 display-3">Dashboard</h1>
- -->
+
         <a href="{% url 'create' %}" class="btn btn-secondary btn-xl rounded-pill mt-5">Create event!</a>      
         {% endif %}
 
 <br>
 <br>
-
 <br>
-<br>
-<br>
-
-<br>
-
-
-
 <br>
 <br>
 <br>

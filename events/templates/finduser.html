@@ -7,39 +7,8 @@
 <div class="masthead-content" style= "background-image: url({% static "video.mp4" %}); background-size: cover;   ">
 
 
-<br>
-<br>
-<br>
-<br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-<br>
-<br>
-
-      {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-secondary  btn-xl rounded-pill mt-5">Sign up to find events!</a>
-      {% else %}
-      <div>
-        <a href="{% url 'search' %}" class="btn btn-secondary btn-xl rounded-pill mt-5">Find events! </a> 
-      </div>
-
-      <div>
-        <a href="{% url 'finduser' %}" class="btn btn-secondary btn-xl rounded-pill mt-5">Find users!</a>
-      </div>     
-        {% endif %}
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 </div>
 
     </div>
@@ -50,7 +19,7 @@
 <!--#####################################################################-->
 
 
-<div class="container m-5 p-5">
+<div class="container  m-5 p-5">
 
 		<form action="{% url 'finduser' %}">
 			<div class="input-group mb-3">
@@ -58,7 +27,7 @@
 				  name= "q" aria-label="Recipient's username" aria-describedby="button-addon2">
 
 				  <div class="input-group-append">
-				    <button class="btn btn-outline-secondary" type="submit" value="Search" id="button-addon2">Search</button>
+				    <button class="btn btn-secondary" type="submit" value="Search" id="button-addon2">Search</button>
 
 
 				  </div>
@@ -67,27 +36,21 @@
 </div> <!--closing the container -->
 
 
-
-
 </div> <!--closing the row -->
 
-
-
- 
-
-<div class="row m-5 pb-4">
+<div class="row  m-5 pb-4">
   {% for item in user %}
-    <div class="col-4">
+    <div class="col-4 pb-4">
   
-          <div class="card" >
+          <div class="card text-white pb-4 m-3" style="background-color: black;" >
           {% if item.photo %}
-                  <img src= "{{ item.photo.url }}" class="card-img-top">
+                  <img height="300px" width="300px" src= "{{ item.photo.url }}" class="card-img-top">
           {% endif %}
               <div class="card-body">
-                    <h5 class="card-title"> {{item.user.username}} </h5>
+                    <h5 class="card-title text-center"> {{item.user.username}} </h5>
               </div>
 
-    <a href="{% url 'profile' item.user.username %}" class="btn btn-primary rounded-pill mt-3">View More</a>
+    <a href="{% url 'profile' item.user.username %}" class="btn btn-secondary rounded-pill m-3 ">View Profile</a>
 
 
           </div> <!--end of card -->
@@ -95,8 +58,5 @@
 </div>  <!--end of col -->
   {% endfor %}
 </div> <!--closing the row -->
-
-
-
  
 {% endblock %}
