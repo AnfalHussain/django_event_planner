@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin, BookForm, EventForm
+from .forms import UserSignup, UserLogin, BookForm, EventForm, UserProfileForm
 from django.contrib import messages
-from .models import Event, Book
+from .models import Event, Book, UserProfile, Relationship
 from datetime import datetime
+from datetime import date
+from datetime import time
+from django.utils import timezone
+
 from django.db.models import Q
 from django.contrib.auth.models import User
-
 
 
 def home(request):
@@ -16,27 +19,48 @@ def home(request):
        
     context = {
         'event' : Event.objects.filter(date__gte=datetime.now()),
-
     }
     return render(request, 'home.html', context)
+
 
 def dashboard(request):
     if request.user.is_anonymous :
         return redirect ("login")
 
-    history_obj = Book.objects.filter(user=request.user)
-    history_obj = Book.objects.filter(event__date__lt =datetime.now() )
-
-
+    # history_obj = Book.objects.filter(user=request.user)
+    history_obj = Book.objects.filter(user=request.user, event__date__lt =datetime.now())
+    my_bookings = Book.objects.filter(user=request.user, event__date__gte =datetime.now())
+    events = Event.objects.filter(owner=request.user)
 
     context = {
-        'event' : Event.objects.filter(owner=request.user),
+        'event' : events,   # naming
         'history' : history_obj,
-
-
+        'my_bookings': my_bookings,
     }
-
     return render(request, 'dashboard.html', context)
+
+
+def cancel_upcoming_booking(request, booking_id ):
+    if request.user.is_anonymous :
+        return redirect ("login")
+
+    booking_obj = Book.objects.get(id=booking_id)
+
+    if not booking_obj.user == request.user:
+        return redirect('no-access')
+    
+    date_time_compbination = datetime.combine(booking_obj.event.date, booking_obj.event.time)
+    difference = date_time_compbination - datetime.today()
+    
+    days, seconds = difference.days, difference.seconds 
+    hours = days * 24 + seconds // 3600
+
+    if datetime.today() <= date_time_compbination and hours > 3:
+        booking_obj.delete()
+    else:
+        return redirect('dashboard')
+    return redirect('dashboard')
+
 
 
 
@@ -44,19 +68,49 @@ def dashboard(request):
 def profile(request, user_name):
     if request.user.is_anonymous :
         return redirect ("login")
-
-
+    user=User.objects.get(username=user_name)
+    event=Event.objects.filter(owner=request.user)
     context = {
-        'user' : User.objects.get(username=user_name),
-
-
+        'user' : UserProfile.objects.get(user=user),
+        'event' : event,
     }
 
     return render(request, 'profile.html', context)
 
+def edit_profile(request, user_name) :
+    user = User.objects.get(username=user_name)
+    user_obj = UserProfile.objects.get(user=user)
+    form = UserProfileForm(instance=user_obj)
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=user_obj)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', user_name)
+    context = {
+        "form": form,
+        "user": user_obj,
+        }
+    return render(request, 'editprofile.html', context)
 
 
+def find_user(request):
+    user = UserProfile.objects.all()
+    query = request.GET.get('q')
+    
+    if query:
+        user = user.filter(
+            Q(user__username__icontains=query)|  
+            Q(first_name__icontains=query)|
+            Q(last_name__icontains=query)|
+            Q(country__icontains=query)|
+            Q(bio__icontains=query)
+             ).distinct()
 
+    context = {
+        'user' : user,
+    }
+
+    return render(request, 'finduser.html', context)
 
 
 
@@ -64,8 +118,8 @@ def search(request):
     event = Event.objects.filter(date__gte=datetime.now())
 
     query = request.GET.get('q')
-# As a user I can search for an event either 
-# by it's title, description or organizer.
+    # As a user I can search for an event either 
+    # by it's title, description or organizer.
     if query:
         event = event.filter(
             # we need to get the username from the owner field
@@ -95,8 +149,8 @@ def book_event(request,event_id):
 
         tickets = request.POST.get('tickets', None)
 
-        if event_obj.get_available_tickets() < int(tickets):
-            messages.warning(request, "you can't book, There is no enough available tickets! ")
+        if event_obj.get_available_tickets() <= int(tickets):
+            messages.warning(request, "you can't book, There are no enough available tickets! ")
 
         if form.is_valid():
             book = form.save(commit=False)
@@ -169,6 +223,7 @@ class Signup(View):
             messages.success(request, "You have successfully signed up.")
             login(request, user)
             return redirect("home")
+            
         messages.warning(request, form.errors)
         return redirect("signup")
 
@@ -209,10 +264,10 @@ class Logout(View):
 
 def detail (request, event_id) :
     event = Event.objects.get(id=event_id)
-    booking_obj = Book.objects.filter(event__owner= request.user, event= event_id  )
+    booking_obj = Book.objects.filter(event__owner= request.user, event= event_id  ).distinct()
 
     # booking_obj = Book.objects.filter(user=request.user)
-    
+
 
 
     context = {
@@ -221,4 +276,10 @@ def detail (request, event_id) :
 
     }
     return render(request, 'detail.html', context)
+
+
+
+def no_access(request):
+    return render(request, 'no_access.html')
+
     

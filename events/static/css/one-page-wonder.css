@@ -1,5 +1,5 @@
 body {
-  font-family: 'Lato';
+  font-family: 'Helvetica';
 }
 
 h1,
@@ -8,7 +8,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Catamaran';
+  font-family: 'Helvetica';
   font-weight: 800 !important;
 }
 
@@ -53,7 +53,7 @@ header.masthead {
   overflow: hidden;
   padding-top: calc(7rem + 72px);
   padding-bottom: 7rem;
-  background: linear-gradient(0deg, #000000 0%, #ee0979 100%);
+  background: linear-gradient(0deg, #000000 0%, #9b00de 100%);
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: scroll;
@@ -126,29 +126,87 @@ header.masthead .bg-circle-4 {
 }
 
 .btn-primary {
-  background-color: #ee0979;
-  border-color: #ee0979;
+  background-color: #d5ace6;
+  border-color: #d5ace6;
+  color: black;
 }
+
+.btn-outline-primary
+{
+  border-color: #d5ace6;
+  color: black;
+}
+
+.btn-outline-primary:active, .btn-primary:focus, .btn-primary:hover {
+  border-color: #bc8cd1 !important;
+  color: black;
+
+}
+
 
 .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
-  background-color: #bd0760 !important;
-  border-color: #bd0760 !important;
+  background-color: #bc8cd1 !important;
+  border-color: #bc8cd1 !important;
+  color: black;
+
 }
+
+
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(238, 9, 121, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(188, 140, 209, 0.5);
+  color: black;
+
 }
 
-.btn-secondary {
-  background-color: #ff6a00;
-  border-color: #ff6a00;
+
+
+
+.top-part img {
+  width: 100%;
+  background-size: cover;
+  position: absolute;
+  overflow: hidden;
+  top:0;
+  left: 0;
 }
+
+/*my buttons*/
+.btn-outline-secondary
+{
+  border-color: #9b00de;
+  color: white;
+
+}
+
+
+.btn-outline-secondary:active, .btn-secondary:focus, .btn-secondary:hover {
+  border-color: #9c07bd !important;
+  color: white;
+}
+
+
+
+/*.btn-outline-secondary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(204, 102, 255, 0.5);
+}
+*/
+
+
+.btn-secondary
+{
+  background-color:#9b00de !important;
+  border-color: #7700ab;
+
+}
+
 
 .btn-secondary:active, .btn-secondary:focus, .btn-secondary:hover {
-  background-color: #cc5500 !important;
-  border-color: #cc5500 !important;
+  background-color: #9c07bd !important;
+  border-color: #9c07bd !important;
 }
 
 .btn-secondary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 106, 0, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(204, 102, 255, 0.5);
 }
+

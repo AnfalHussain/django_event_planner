@@ -1,71 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="masthead text-center text-white">
- <div class="masthead-content">
-   <div class="container">
-     <h1 class="masthead-heading mb-0">All the events,</h1>
-     <h2 class="masthead-subheading mb-0">You could ever want...</h2>
-     {% if request.user.is_anonymous %}
-       <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
-     
-     {% endif %}
-   </div>
- </div>
- <div class="bg-circle-1 bg-circle"></div>
- <div class="bg-circle-2 bg-circle"></div>
- <div class="bg-circle-3 bg-circle"></div>
- <div class="bg-circle-4 bg-circle"></div>
-</header>
-<!--............................................-->
-<!--............................................-->
-<!--............................................-->
-<!--............................................-->
-<div class="container">
- <div class="row">
-   <ul class="list-unstyled">
-     <li class="media">
-            <div class="col-med-6 m-5 pb-4">
-                   {% if event.image %}
-                          <img src="{{ event.image.url }}" class="card-img-top img-fluid rounded ">
-                   {% endif %}
-            </div>
 
-<div class="col-med-6 m-5 pb-4">
-      <h1>{{event.title|title}}</h1>
-      <h5>Description: {{event.description}}</h5>
-      <p>Date and Time: {{event.date}} - {{event.time}}</p>
-      <p>Location: {{ event.location }}</p>
-      <p>Price: {{ event.price }} KWD</p>
 
-      <p>Booked by: </p>
+<!--............................................-->
+<!--............................................-->
+<!--............................................-->
+<!--............................................-->
+
+
+  <div class="jumbotron text-white " style="border-color: #9c07bd; ">
+
+    <div class="container" >
+      <h1 class="display-1 text-center">{{event.title|title}}</h1>
+   <center>
+<div class="row ">                         
+                  
+
+
+
+           {% if event.image %}
+
+                          <img src="{{ event.image.url }}" class=" rounded mx-auto d-block">
+
+            {% endif %}
+
+    </div> 
+</center>
+
+
+
+  <div class="container">
+    <p class="lead">      
+      <h5 style="color: #e8a7fc;">Description:</h5> 
+      <p>{{event.description}} </p>     
+      <hr>
+
+      <h5 style="color: #e8a7fc;"> Date and Time:</h5>  <p>{{event.date}} - {{event.time}}</p>
+            <hr>
+
+      <h5 style="color: #e8a7fc;"> Location: </h5> <p>{{ event.location }}</p>
+            <hr>
+
+      <h5 style="color: #e8a7fc;"> Price: </h5> <p>{{ event.price }} KWD</p>
+
+
+    </p>
+
+
+
+  </div>
+<!--       <h1>{{event.title|title}}</h1>
+<h5>Description: {{event.description}}</h5>
+<p>Date and Time: {{event.date}} - {{event.time}}</p>
+<p>Location: {{ event.location }}</p>
+<p>Price: {{ event.price }} KWD</p> -->
+
 
       <div class="card-body" >
         
         {% if event.owner == request.user %}
+        
+          <h5 style="color: #e8a7fc;"> Booked by: </h5>
 
             {% for booking in booking_obj %}
-                    <button>{{booking.user}}</button>
+                    <button class="btn rounded-pill">{{booking.user}},  </button>
             {% endfor %}
       </div>
 
-            <a href="{% url 'update' event.id %}" class="btn btn-primary rounded-pill mt-3">Edit this event</a>
+            <a href="{% url 'update' event.id %}" class="btn btn-secondary rounded-pill mt-3 btn-block">Edit Event</a>
         {% endif %}
 
 
 
      {% if event.get_available_tickets == 0 %}
   
-          <a  class="btn btn-warning rounded-pill mt-3 ">Full</a>
+          <a  class="btn btn-info  rounded-pill mt-3 btn-block">Full</a>
 
     {% else %}
-          <a href="{% url 'book' event.id %}" class="btn btn-primary rounded-pill mt-3">Book</a>
+          <a href="{% url 'book' event.id %}" class="btn btn-secondary rounded-pill mt-3 btn-block">Book</a>
 
      {% endif %}
 
+</div> <!--closing the row -->
 
-</div> <!--closing the col -->
-</li>
-</ul>
+
 </div> <!--closing the row -->
 </div> <!--closing the container -->
 {% endblock %}

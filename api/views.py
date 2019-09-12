@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView 
 
 from events.models import Event, Book, Relationship
-from api.serializers import (ListBookedEventsSerializer, WhoBookedMyEventsSerializer, BookEventSerializer, FollowSerializer, FollowingAUserSerializer, CreateEventSerializer, SignupSerializer, LoginSerializer)
+from api.serializers import (ListBookedEventsSerializer, WhoBookedAnEventSerializer, BookEventSerializer, FollowSerializer, FollowingAUserSerializer, CreateEventSerializer, SignupSerializer, LoginSerializer)
 
 from rest_framework.permissions import IsAuthenticated 
 from api.permissions import IsEventOwner, IsFollower
@@ -43,12 +43,12 @@ class UpdateEventView(RetrieveUpdateAPIView):
 
 
 
-class ListWhoBookedMyEventsView(ListAPIView):
-	serializer_class = WhoBookedMyEventsSerializer
+class ListWhoBookedAnEventView(ListAPIView):
+	serializer_class = WhoBookedAnEventSerializer
 	permission_classes = [IsAuthenticated, IsEventOwner]
 
 	def get_queryset(self):
-		return Book.objects.filter(event__owner=self.request.user)
+		return Book.objects.filter(event_id=self.kwargs['event_id'])
 
 
 class BookEventView(CreateAPIView):
@@ -62,9 +62,10 @@ class BookEventView(CreateAPIView):
 	def perform_create(self, serializer ):
 
 		valid_data = serializer.validated_data
-		print(valid_data)
+		print(valid_data['tickets'])
 		print(self.get_object().get_available_tickets())
-		if valid_data['tickets'] < self.get_object().get_available_tickets():
+		if valid_data['tickets'] <= self.get_object().get_available_tickets():
+			print(self.get_object().get_available_tickets())
 			return serializer.save(user=self.request.user, event_id=self.kwargs['event_id'])
 		else:
 			return "There are no enough tickets to book"

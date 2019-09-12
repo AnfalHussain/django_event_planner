@@ -6,7 +6,7 @@ class Event(models.Model) :
 	title = models.CharField(max_length=150)
 	date = models.DateField()
 	time = models.TimeField()
-	num_of_tickets = models.IntegerField()
+	seats = models.IntegerField()
 	description = models.TextField()
 	location = models.CharField(max_length=150)
 	image = models.ImageField(null=True, blank=True)
@@ -31,7 +31,7 @@ class Event(models.Model) :
 		return count
 
 	def get_available_tickets(self):
-		return self.num_of_tickets - self.get_booked_tickets()	
+		return self.seats - self.get_booked_tickets()	
 
 
 
@@ -39,17 +39,17 @@ class Event(models.Model) :
 
 class Book(models.Model):
 	event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='booked_tickets')
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)	# related name
 	tickets = models.IntegerField()
 
 
-
 class UserProfile(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'my_user_profile')
-	user_photo = models.ImageField(null=True, blank=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'my_user_profile')	#related name profile
+	first_name = models.CharField(max_length=150)	
+	last_name = models.CharField(max_length=150)	
+	photo = models.ImageField(null=True, blank=True)	
+	country = models.CharField(max_length=150)
 	bio = models.TextField()
-
-
 
 class Relationship(models.Model):
 	following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')

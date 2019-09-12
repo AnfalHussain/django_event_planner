@@ -24,7 +24,7 @@ class CreateEventSerializer(serializers.ModelSerializer):
 
 
 
-class WhoBookedMyEventsSerializer(serializers.ModelSerializer):
+class WhoBookedAnEventSerializer(serializers.ModelSerializer):
 	booked_by = serializers.SerializerMethodField()
 
 	class Meta:

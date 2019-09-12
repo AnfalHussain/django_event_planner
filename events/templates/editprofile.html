@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Edit Profile{% endblock title %}
+{% block content %}
+<div class="container-fluid pb-5" style="margin-top:80px">
+<div class="card">
+   <h5 class="card-header">Edit Profile</h5>
+   <div class="card-body">
+       <p class="card-text">
+           <form action="{% url 'edit-profile' request.user.username %}" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               {{form|crispy}}
+               <input type="submit" value="Update">
+           </form>
+       </p>
+   </div> <!-- end of card-body -->
+</div> <!-- end of card -->
+</div>
+{% endblock content %}

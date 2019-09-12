@@ -1,24 +1,24 @@
 {% extends "base.html" %}
-
+​
 {% block content %}
-
+​
   <header class="masthead text-center text-white">
     <div class="masthead-content">
       <div class="container">
-
-
+​
+​
        {% if request.user.is_anonymous %}
-
+​
          <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to have a profile!</a>
-
-
+​
+​
         {% else %} 
-
-               <h1 class="masthead-heading mb-0">  {{user.username}}'s Profile</h1>
+​
+               <h1 class="masthead-heading mb-0">  {{user.user.username}}'s Profile</h1>
                 
-
-
-
+​
+​
+​
       </div>
     </div>
                      <div class="bg-circle-1 bg-circle"></div>
@@ -30,40 +30,100 @@
           <!--............................................-->
           <!--............................................-->
           <!--............................................-->
-<div class="container m-5 p-5">
+​
 
-          <div class="container">
-           <div class="row">
-             <ul class="list-unstyled">
-               <li class="media">
+      <div class="container container-fluid">
+        <div class="card mb-3 border-light bg-dark text-white rounded-pill">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              {% if user.photo %}
+              <img src="{{ user.photo.url }}" class="card-img p-5 rounded-circle">
+              {% endif %}
+
+                {% if user.user == request.user %}
+                <a href="{% url 'edit-profile' request.user.username %}" class="btn btn-primary rounded-pill mb-5 ">Edit Profile</a>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-8">
+              <div class="card-body pl-5 pl-5">
+                
+                <h1 class="card-title display-1 text-center">{{user.user.username}}</h1>
+                <h4 class="card-text text-muted text-center"> <small>{{user.country}}</small> </h4>
+                <hr>
+
+                <table>
+
+                  <tr>
+                    <td >
+                      <h5 class="card-text pr-3 text-muted">Name:</h5>
+                    </td>
+                    <td>
+                      <h5 class="card-text">{{user.first_name}} {{user.last_name}}</h5>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <h5 class="card-text pr-3 pt-5 text-muted">Bio:</h5>
+                    </td>
+                    <br>
+                    <td>
+                      <h5 class="card-text  pt-5">{{user.bio}}</h5>
+                    </td>
+                  </tr>
+
+                </table>
 
 
-                    <div class="col-med-6 m-5 pb-4">
-                          <h1> Name: {{user}} </h1>
-                    </div> <!--closing the col -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+            <!--#####################################################-->
+        <br>
+        <hr>
+            <!--#####################################################-->
 
 
-              </li>
-               <li class="media">
+        <h1  class="text-center" style="padding:10px; color:#e7b3ff;"> My Events: </h1>
+
+<div class="col-12 text-center card mb-3 bg-dark text-white " style="padding-bottom:50px;">
+<!--           <div class="card mb-3 border-light bg-dark text-white rounded-pill">
+ -->
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Event Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Price</th>
+
+    </tr>
+  </thead>
+
+  {% for item in event %}
+      <tbody>
+        <tr>
+          <td>{{item.title}}</td>
+          <td>{{item.date}}</td>
+          <td>{{item.time}}</td>
+          <td>{{item.price}}</td>
+        </tr>
+      </tbody>
+  {% endfor %}
 
 
-                    <div class="col-med-6 m-5 pb-4">
-                          <h1> Bio: 
-                           </h1>
-                    </div> <!--closing the col -->
+</table>
+</div>
 
-
-              </li>
-
-
-            </ul>
-          </div> <!--closing the row -->
-        </div> <!--closing the container -->
-
-
+​
      {% endif %}
 
-</div> <!--closing the container -->
-
-
+     
+​
+​
 {% endblock %}
+

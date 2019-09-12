@@ -10,7 +10,9 @@
   <div class="masthead-content">
     <div class="container">
         <div class="jumbotron">
-          <h2 class="masthead-subheading mb-0">Book {{event.name_of_event}}</h2>
+          <h2 class="masthead-subheading mb-0">Book {{event.title}}</h2>
+          <h5 >Available Tickets: {{event.get_available_tickets}}</h5>
+
           <form action="{% url 'book' event.id %}" method="POST">
             {% csrf_token %}
             {{form|crispy}}
