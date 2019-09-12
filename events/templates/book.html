@@ -11,7 +11,7 @@
     <div class="container">
         <div class="jumbotron">
           <h2 class="masthead-subheading mb-0">Book {{event.title}}</h2>
-          <h5 >Available Tickets: {{event.get_available_tickets}}</h5>
+          <h5 style="color: #bc8cd1; ">Available Tickets: {{event.get_available_tickets}}</h5>
 
           <form action="{% url 'book' event.id %}" method="POST">
             {% csrf_token %}
